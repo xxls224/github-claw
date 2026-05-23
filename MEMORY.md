@@ -11,3 +11,5 @@
 - 一次性排障过程
 - 只对当前会话有用的信息
 
+## 项目约定
+- 前端采用 React 18 + Vite + Tailwind CSS v3，脚本使用 npm run dev/lint/build/format。

@@ -1,0 +1,8 @@
+<svg width="240" height="240" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="240" height="240" rx="24" fill="#F5F5F5" />
+  <rect x="40" y="40" width="160" height="160" rx="16" fill="#FFFFFF" stroke="#D8D8D8" stroke-width="2" />
+  <path d="M80 90H160M80 120H160M80 150H140" stroke="#C0C0C0" stroke-width="6" stroke-linecap="round" />
+  <text x="120" y="200" text-anchor="middle" font-size="16" fill="#888888" font-family="system-ui, -apple-system, sans-serif">
+    微信二维码占位符
+  </text>
+</svg>
