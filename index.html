@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>思维与英语教育｜个人家教单页</title>
+    <style>
+      :root {
+        --primary: #165dff;
+        --accent: #36d399;
+        --text: #1f2937;
+        --muted: #6b7280;
+        --bg: #ffffff;
+        --card: #f8fafc;
+        --border: #e5e7eb;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, "Noto Sans", "PingFang SC",
+          "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.7;
+        padding-top: 68px;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .container {
+        width: min(92vw, 720px);
+        margin: 0 auto;
+      }
+
+      .section {
+        padding: 32px 0;
+      }
+
+      .section-title {
+        font-size: 20px;
+        margin-bottom: 16px;
+        color: var(--primary);
+      }
+
+      .section-subtitle {
+        font-size: 15px;
+        color: var(--muted);
+        margin-bottom: 20px;
+      }
+
+      .nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+        z-index: 1000;
+        transition: background 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .nav.solid {
+        background: #ffffff;
+        box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+      }
+
+      .nav-inner {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .brand {
+        font-weight: 700;
+        font-size: 18px;
+        color: var(--primary);
+      }
+
+      .nav-links a {
+        font-size: 14px;
+        color: var(--muted);
+        margin-left: 16px;
+      }
+
+      .hero {
+        padding: 24px 0 32px;
+      }
+
+      .hero-title {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+
+      .hero-subtitle {
+        font-size: 15px;
+        color: var(--muted);
+        margin-bottom: 20px;
+      }
+
+      .hero-points {
+        list-style: none;
+        margin-bottom: 24px;
+      }
+
+      .hero-points li {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        margin-bottom: 10px;
+        font-size: 15px;
+      }
+
+      .hero-points .check {
+        color: var(--accent);
+        font-weight: 700;
+      }
+
+      .btn {
+        display: block;
+        width: 100%;
+        min-height: 48px;
+        padding: 12px 16px;
+        border-radius: 999px;
+        text-align: center;
+        font-size: 15px;
+        font-weight: 600;
+        border: 2px solid transparent;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        max-width: 520px;
+        margin: 0 auto 12px;
+      }
+
+      .btn-primary {
+        background: var(--accent);
+        color: #0f172a;
+        box-shadow: 0 10px 20px rgba(54, 211, 153, 0.25);
+      }
+
+      .btn-outline {
+        border-color: var(--primary);
+        color: var(--primary);
+        background: #ffffff;
+      }
+
+      .btn:active {
+        transform: scale(0.98);
+      }
+
+      .hero-illustration {
+        margin-top: 24px;
+        height: 180px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #eef2ff, #ecfeff);
+        border: 1px dashed var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 18px;
+        margin-bottom: 16px;
+      }
+
+      .course-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: rgba(22, 93, 255, 0.12);
+        color: var(--primary);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+
+      .course-title {
+        font-size: 18px;
+        margin-bottom: 8px;
+      }
+
+      .course-desc {
+        font-size: 14px;
+        color: var(--muted);
+        margin-bottom: 12px;
+      }
+
+      .price-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+        margin-bottom: 12px;
+      }
+
+      .price-table th,
+      .price-table td {
+        border: 1px solid var(--border);
+        padding: 10px 8px;
+        text-align: center;
+      }
+
+      .stats {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .stat-item {
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 14px;
+      }
+
+      .stat-value {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--primary);
+      }
+
+      .stat-label {
+        font-size: 14px;
+        color: var(--muted);
+      }
+
+      .quotes {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 16px;
+      }
+
+      .quote {
+        background: #ffffff;
+        border-left: 4px solid var(--accent);
+        padding: 12px 14px;
+        border-radius: 12px;
+        font-size: 14px;
+        color: var(--muted);
+      }
+
+      .steps {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .step {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+      }
+
+      .step-number {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--primary);
+        color: #ffffff;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+      }
+
+      details {
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 12px 14px;
+      }
+
+      details summary {
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        list-style: none;
+      }
+
+      details p {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .booking-info {
+        font-size: 14px;
+        color: var(--muted);
+        margin-top: 12px;
+      }
+
+      .footer {
+        padding: 24px 0 80px;
+        border-top: 1px solid var(--border);
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .qr-placeholder {
+        height: 160px;
+        border: 1px dashed var(--border);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--muted);
+        margin: 12px 0;
+      }
+
+      .privacy {
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 14px;
+        font-size: 14px;
+        color: var(--muted);
+      }
+
+      .floating-wechat {
+        position: fixed;
+        right: 18px;
+        bottom: 18px;
+        width: 56px;
+        height: 56px;
+        background: var(--accent);
+        border-radius: 50%;
+        box-shadow: 0 12px 24px rgba(54, 211, 153, 0.35);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #0f172a;
+        font-weight: 700;
+        z-index: 1001;
+      }
+
+      .floating-wechat span {
+        font-size: 12px;
+        line-height: 1.1;
+        text-align: center;
+      }
+
+      section {
+        scroll-margin-top: 80px;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="nav" id="top">
+      <div class="container nav-inner">
+        <div class="brand">思维与英语教育</div>
+        <nav class="nav-links">
+          <a href="#courses">课程</a>
+          <a href="#cases">案例</a>
+          <a href="#booking">预约</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container">
+          <h1 class="hero-title">用思维点亮成长，用英语连接世界</h1>
+          <p class="hero-subtitle">
+            广州本地 | 书法·象棋·魔方·英语 | 一对一精品教学
+          </p>
+          <ul class="hero-points">
+            <li>
+              <span class="check">✅</span>
+              <span>专注5-15岁孩子思维能力培养</span>
+            </li>
+            <li>
+              <span class="check">✅</span>
+              <span>独创“三维一体”教学体系</span>
+            </li>
+            <li>
+              <span class="check">✅</span>
+              <span>广州天河区上门/工作室教学</span>
+            </li>
+          </ul>
+          <a class="btn btn-primary" href="weixin://dl/chat">立即微信咨询</a>
+          <a class="btn btn-outline" href="#booking">预约免费试听课</a>
+          <div class="hero-illustration">抽象教育插画占位符</div>
+        </div>
+      </section>
+
+      <section class="section" id="philosophy">
+        <div class="container">
+          <h2 class="section-title">为什么选择思维教育？</h2>
+          <p class="section-subtitle">
+            传统教育只关注知识灌输，而思维能力才是孩子一生的核心竞争力。
+          </p>
+          <p class="section-subtitle">
+            通过书法培养专注力和耐心，通过象棋锻炼逻辑思维和战略眼光，通过魔方提升空间想象力和手眼协调能力，同时将思维训练融入英语学习中，让孩子在思考中学习，在学习中思考。
+          </p>
+          <p class="section-subtitle">
+            我更关注孩子自主学习的能力和解决问题的思维，而不是短期分数提升。
+          </p>
+          <a class="btn btn-outline" href="weixin://dl/chat">了解教学理念</a>
+        </div>
+      </section>
+
+      <section class="section" id="courses">
+        <div class="container">
+          <h2 class="section-title">课程体系</h2>
+          <div class="card">
+            <div class="course-icon">英</div>
+            <div class="course-title">英语思维课程</div>
+            <div class="course-desc">
+              适合5-15岁，打破传统死记硬背，培养英语思维，提升听说读写综合能力。
+              特色：全英文环境 | 互动式教学 | 原版教材
+            </div>
+            <a class="btn btn-outline" href="weixin://dl/chat">了解更多</a>
+          </div>
+          <div class="card">
+            <div class="course-icon">书</div>
+            <div class="course-title">书法思维课程</div>
+            <div class="course-desc">
+              适合5-15岁，修身养性，锻炼专注力和耐心，写出一手好字。
+              特色：硬笔+软笔 | 手把手指导 | 作品创作
+            </div>
+            <a class="btn btn-outline" href="weixin://dl/chat">了解更多</a>
+          </div>
+          <div class="card">
+            <div class="course-icon">棋</div>
+            <div class="course-title">象棋思维课程</div>
+            <div class="course-desc">
+              适合6-15岁，智慧的体操，培养逻辑思维、大局观和抗挫折能力。
+              特色：从入门到精通 | 大量实战 | 复盘分析
+            </div>
+            <a class="btn btn-outline" href="weixin://dl/chat">了解更多</a>
+          </div>
+          <div class="card">
+            <div class="course-icon">魔</div>
+            <div class="course-title">魔方思维课程</div>
+            <div class="course-desc">
+              适合5-15岁，提升空间想象力、记忆力和手眼协调能力。
+              特色：简单易懂 | 快速入门 | 竞速训练
+            </div>
+            <a class="btn btn-outline" href="weixin://dl/chat">了解更多</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="pricing">
+        <div class="container">
+          <h2 class="section-title">清晰透明的价格体系</h2>
+          <p class="section-subtitle">所有课程均为一对一教学，无隐形消费。</p>
+          <table class="price-table">
+            <thead>
+              <tr>
+                <th>课程类型</th>
+                <th>工作室教学</th>
+                <th>上门教学</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>英语课程</td>
+                <td>120元/小时</td>
+                <td>150元/小时</td>
+              </tr>
+              <tr>
+                <td>书法/象棋/魔方</td>
+                <td>110元/小时</td>
+                <td>140元/小时</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="section-subtitle">课时包优惠：10课时95折，20课时9折，30课时85折。</p>
+          <p class="section-subtitle">备注：天河区全境上门，其他区域可协商。</p>
+          <a class="btn btn-outline" href="weixin://dl/chat">获取课程报价</a>
+        </div>
+      </section>
+
+      <section class="section" id="cases">
+        <div class="container">
+          <h2 class="section-title">见证孩子的成长</h2>
+          <div class="stats">
+            <div class="stat-item">
+              <div class="stat-value">3000+</div>
+              <div class="stat-label">累计教学时长</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value">200+</div>
+              <div class="stat-label">帮助过的学生</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value">98%</div>
+              <div class="stat-label">家长满意度</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value">95%</div>
+              <div class="stat-label">学生进步率</div>
+            </div>
+          </div>
+          <div class="quotes">
+            <div class="quote">
+              “孩子学习象棋后，逻辑思维明显变强了，做数学题也更有条理了。”
+              —— 三年级家长
+            </div>
+            <div class="quote">
+              “老师很有耐心，孩子以前特别坐不住，现在练书法能安静坐40分钟了。”
+              —— 二年级家长
+            </div>
+            <div class="quote">
+              “英语教学方法很特别，孩子不再害怕说英语了，成绩也提高了不少。”
+              —— 五年级家长
+            </div>
+          </div>
+          <a class="btn btn-outline" href="weixin://dl/chat">了解更多案例</a>
+        </div>
+      </section>
+
+      <section class="section" id="process">
+        <div class="container">
+          <h2 class="section-title">简单4步，开启学习之旅</h2>
+          <div class="steps">
+            <div class="step">
+              <span class="step-number">1</span>
+              <div>微信咨询：添加微信，沟通孩子基本情况</div>
+            </div>
+            <div class="step">
+              <span class="step-number">2</span>
+              <div>免费诊断：15分钟线上学情诊断，评估现有水平</div>
+            </div>
+            <div class="step">
+              <span class="step-number">3</span>
+              <div>预约试课：免费30分钟体验课，感受教学风格</div>
+            </div>
+            <div class="step">
+              <span class="step-number">4</span>
+              <div>正式上课：定制学习方案，开始一对一教学</div>
+            </div>
+          </div>
+          <a class="btn btn-outline" href="weixin://dl/chat">立即开始咨询</a>
+        </div>
+      </section>
+
+      <section class="section" id="faq">
+        <div class="container">
+          <h2 class="section-title">常见问题</h2>
+          <div class="steps">
+            <details>
+              <summary>孩子没有基础可以学习吗？</summary>
+              <p>当然可以。所有课程都从零基础开始，根据孩子的接受能力调整进度。</p>
+            </details>
+            <details>
+              <summary>一节课多长时间？</summary>
+              <p>小学低年级45分钟，小学高年级和初中60分钟。</p>
+            </details>
+            <details>
+              <summary>可以同时学习多个课程吗？</summary>
+              <p>可以。很多孩子同时学习英语和象棋，或者书法和魔方，效果很好。</p>
+            </details>
+            <details>
+              <summary>可以请假吗？</summary>
+              <p>可以。提前24小时通知，课时可以顺延。</p>
+            </details>
+            <details>
+              <summary>不满意可以退费吗？</summary>
+              <p>可以。未使用的课时全额退费，无任何手续费。</p>
+            </details>
+          </div>
+          <a class="btn btn-outline" href="weixin://dl/chat">还有疑问？微信咨询</a>
+        </div>
+      </section>
+
+      <section class="section" id="booking">
+        <div class="container">
+          <h2 class="section-title">给孩子一个改变的机会</h2>
+          <p class="section-subtitle">
+            现在预约，即可获得免费15分钟学情诊断和一节30分钟体验课。
+          </p>
+          <a class="btn btn-primary" href="weixin://dl/chat">立即微信预约</a>
+          <div class="booking-info">
+            服务时间：周一至周五 17:30-21:30，周六周日 8:30-18:30
+          </div>
+          <div class="booking-info">服务区域：广州天河区（其他区域可协商）</div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <div>思维与英语教育</div>
+        <div class="qr-placeholder">微信二维码占位符</div>
+        <div class="privacy">
+          本网站严格保护个人隐私，所有教学服务均通过微信一对一沟通。我们不会收集、存储或分享任何家长和学生的个人信息。
+        </div>
+        <div>© 2026 保留所有权利</div>
+      </div>
+    </footer>
+
+    <a class="floating-wechat" href="weixin://dl/chat" aria-label="微信咨询">
+      <span>微信<br />咨询</span>
+    </a>
+
+    <script>
+      const nav = document.querySelector(".nav");
+      const toggleNav = () => {
+        if (window.scrollY > 10) {
+          nav.classList.add("solid");
+        } else {
+          nav.classList.remove("solid");
+        }
+      };
+      toggleNav();
+      window.addEventListener("scroll", toggleNav);
+    </script>
+  </body>
+</html>
