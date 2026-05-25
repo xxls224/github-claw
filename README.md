@@ -53,6 +53,11 @@ const FORMSPREE_ENDPOINT = 'https://formspree.io/f/yourFormId'
 - `src/sections/FaqSection.jsx`：常见问题
 - `src/sections/TestimonialsSection.jsx`：匿名家长评价
 
+### 5) SEO 与搜索引擎收录
+
+- `index.html` 中的 canonical / Open Graph / Twitter / 结构化数据使用 `https://xxls224.github.io/github-claw/`，如更换域名或仓库名请同步更新
+- `public/robots.txt` 与 `public/sitemap.xml` 需与实际部署 URL 保持一致
+
 ## GitHub Pages 部署
 
 已配置 `.github/workflows/deploy.yml` 自动部署到 GitHub Pages。默认 `base` 路径为仓库名：
