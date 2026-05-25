@@ -111,6 +111,7 @@ function App() {
   const [scrolled, setScrolled] = useState(false)
   const [statsVisible, setStatsVisible] = useState(false)
   const statsRef = useRef(null)
+  const closeButtonRef = useRef(null)
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 8)
@@ -137,6 +138,7 @@ function App() {
 
   useEffect(() => {
     if (!menuOpen) return undefined
+    closeButtonRef.current?.focus()
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
         setMenuOpen(false)
@@ -219,6 +221,10 @@ function App() {
           tabIndex={0}
           aria-label="关闭导航菜单"
           onKeyDown={(event) => {
+            if (event.key === 'Escape') {
+              setMenuOpen(false)
+              return
+            }
             if (event.key === 'Enter' || event.key === ' ') {
               event.preventDefault()
               setMenuOpen(false)
@@ -239,6 +245,7 @@ function App() {
                 className="flex min-h-[48px] min-w-[48px] items-center justify-center rounded-full border border-gray-200 text-text-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
                 onClick={() => setMenuOpen(false)}
                 aria-label="关闭导航菜单"
+                ref={closeButtonRef}
               >
                 <X className="h-5 w-5" />
               </button>
@@ -259,7 +266,7 @@ function App() {
               <a
                 href="#booking"
                 onClick={() => setMenuOpen(false)}
-                className="flex min-h-[48px] items-center justify-center rounded-full border border-primary/30 text-base font-semibold text-primary"
+                className="flex min-h-[48px] items-center justify-center rounded-full border border-primary/30 text-base font-semibold text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
               >
                 预约试听
               </a>
@@ -267,7 +274,7 @@ function App() {
                 href={WECHAT_LINK}
                 target="_blank"
                 rel="noreferrer"
-                className="flex min-h-[48px] items-center justify-center rounded-full bg-mint text-base font-semibold text-white shadow-soft transition hover:opacity-90"
+                className="flex min-h-[48px] items-center justify-center rounded-full bg-mint text-base font-semibold text-white shadow-soft transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint/40"
               >
                 微信咨询
               </a>
