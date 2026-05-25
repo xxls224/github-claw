@@ -59,6 +59,7 @@ Examples of future delivery methods:
 
 - The automation uses `PyGitHub` and `requests` only.
 - Set `GITHUB_TOKEN` and `GITHUB_REPOSITORY` in Actions; the workflow already injects the default token.
+- Scheduled runs without any configured body source will automatically switch to `--cleanup-only` mode.
 - The error notification issue uses the same `daily-ai-brief` label so failures stay visible in one filtered view.
 
 ## Recommended manual checks
