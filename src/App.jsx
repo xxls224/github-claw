@@ -135,6 +135,17 @@ function App() {
     return () => observer.disconnect()
   }, [])
 
+  useEffect(() => {
+    if (!menuOpen) return undefined
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setMenuOpen(false)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [menuOpen])
+
   return (
     <div className="min-h-screen bg-slate-50 text-text-dark">
       <a
@@ -543,7 +554,7 @@ function App() {
                     name="childName"
                     type="text"
                     placeholder="请输入孩子姓名"
-                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-base text-text-dark focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
+                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-base text-text-dark focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
                     required
                   />
                 </label>
@@ -553,7 +564,7 @@ function App() {
                     name="childAge"
                     type="text"
                     placeholder="请输入孩子年龄"
-                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-base text-text-dark focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
+                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-base text-text-dark focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
                     required
                   />
                 </label>
@@ -563,7 +574,7 @@ function App() {
                     name="wechat"
                     type="text"
                     placeholder="请输入微信号"
-                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-base text-text-dark focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
+                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-base text-text-dark focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
                     required
                   />
                 </label>
@@ -573,7 +584,7 @@ function App() {
                     name="course"
                     type="text"
                     placeholder="如：英语思维课程"
-                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-base text-text-dark focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
+                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-base text-text-dark focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
                     required
                   />
                 </label>
