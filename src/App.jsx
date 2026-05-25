@@ -158,7 +158,7 @@ function App() {
         className={`fixed top-0 z-50 w-full transition-all ${
           scrolled
             ? 'bg-white shadow-soft'
-            : 'bg-white/75 backdrop-blur-sm'
+            : 'bg-white/90 backdrop-blur-sm'
         }`}
       >
         <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-4">
@@ -339,7 +339,7 @@ function App() {
                 </dl>
                 <a
                   href="#booking"
-                  className="flex min-h-[48px] w-full items-center justify-center rounded-full bg-primary text-base font-semibold text-white shadow-soft transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                  className="flex min-h-[48px] w-full items-center justify-center rounded-full bg-primary text-base font-semibold text-white shadow-soft transition hover:opacity-90 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
                 >
                   立即预约评估
                 </a>
@@ -377,7 +377,7 @@ function App() {
                   return (
                     <div
                       key={course.title}
-                      className="rounded-2xl bg-white p-5 shadow-soft transition hover:-translate-y-1 hover:shadow-lg"
+                      className="rounded-2xl bg-white p-5 shadow-soft transition hover:-translate-y-1 hover:shadow-lg active:scale-[0.99]"
                     >
                       <div className="flex items-center gap-3">
                         <span className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
@@ -505,7 +505,7 @@ function App() {
                 return (
                   <div
                     key={step.title}
-                    className="rounded-2xl border border-gray-100 bg-white p-5 transition hover:-translate-y-1 hover:shadow-soft"
+                    className="rounded-2xl border border-gray-100 bg-white p-5 transition hover:-translate-y-1 hover:shadow-soft active:scale-[0.99]"
                   >
                     <div className="flex items-center gap-3">
                       <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white">
