@@ -2,6 +2,10 @@
 
 基于 React 18 + Vite + Tailwind CSS v3 构建的移动端优先个人家教单页网站，默认配置 GitHub Pages 部署与 Formspree 表单。
 
+## GitHub Actions 简报自动化
+
+仓库新增 `daily-ai-brief` 定时 Issue 发布流程，说明见 `DAILY_BRIEF_GUIDE.md`。
+
 ## 开发与构建
 
 ```bash
