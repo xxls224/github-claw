@@ -146,8 +146,8 @@ function App() {
       <header
         className={`fixed top-0 z-50 w-full transition-all ${
           scrolled
-            ? 'bg-white/95 shadow-soft'
-            : 'bg-white/85 backdrop-blur-sm'
+            ? 'bg-white shadow-soft'
+            : 'bg-white/75 backdrop-blur-sm'
         }`}
       >
         <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-4">
@@ -203,13 +203,13 @@ function App() {
       {menuOpen && (
         <div
           className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm md:hidden"
-          role="presentation"
           onClick={() => setMenuOpen(false)}
         >
           <div
             className="absolute right-0 top-0 h-full w-72 space-y-6 bg-white p-6 shadow-xl"
             role="dialog"
             aria-label="移动端导航"
+            aria-modal="true"
             onClick={(event) => event.stopPropagation()}
           >
             <div className="flex items-center justify-between">
@@ -317,15 +317,15 @@ function App() {
                     每位孩子都将获得个性化评估与学习计划，课程强度和节奏可灵活调整。
                   </p>
                 </div>
-                <div className="grid gap-3">
+                <dl className="grid gap-3">
                   {heroCards.map((card) => (
                     <div key={card.label} className="rounded-2xl bg-slate-50 p-4">
-                      <p className="text-xs font-semibold text-text-medium">{card.label}</p>
-                      <p className="mt-2 text-base font-semibold text-text-dark">{card.value}</p>
-                      <p className="mt-1 text-xs text-text-medium">{card.note}</p>
+                      <dt className="text-xs font-semibold text-text-medium">{card.label}</dt>
+                      <dd className="mt-2 text-base font-semibold text-text-dark">{card.value}</dd>
+                      <dd className="mt-1 text-xs text-text-medium">{card.note}</dd>
                     </div>
                   ))}
-                </div>
+                </dl>
                 <a
                   href="#booking"
                   className="flex min-h-[48px] w-full items-center justify-center rounded-full bg-primary text-base font-semibold text-white shadow-soft transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
