@@ -215,6 +215,15 @@ function App() {
         <div
           className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm md:hidden"
           onClick={() => setMenuOpen(false)}
+          role="button"
+          tabIndex={0}
+          aria-label="关闭导航菜单"
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault()
+              setMenuOpen(false)
+            }
+          }}
         >
           <div
             className="absolute right-0 top-0 h-full w-72 space-y-6 bg-white p-6 shadow-xl"
@@ -332,8 +341,10 @@ function App() {
                   {heroCards.map((card) => (
                     <div key={card.label} className="rounded-2xl bg-slate-50 p-4">
                       <dt className="text-xs font-semibold text-text-medium">{card.label}</dt>
-                      <dd className="mt-2 text-base font-semibold text-text-dark">{card.value}</dd>
-                      <dd className="mt-1 text-xs text-text-medium">{card.note}</dd>
+                      <dd className="mt-2 space-y-1">
+                        <p className="text-base font-semibold text-text-dark">{card.value}</p>
+                        <p className="text-xs text-text-medium">{card.note}</p>
+                      </dd>
                     </div>
                   ))}
                 </dl>
@@ -554,7 +565,7 @@ function App() {
                     name="childName"
                     type="text"
                     placeholder="请输入孩子姓名"
-                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-base text-text-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
+                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-base text-text-dark focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
                     required
                   />
                 </label>
@@ -564,7 +575,7 @@ function App() {
                     name="childAge"
                     type="text"
                     placeholder="请输入孩子年龄"
-                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-base text-text-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
+                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-base text-text-dark focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
                     required
                   />
                 </label>
@@ -574,7 +585,7 @@ function App() {
                     name="wechat"
                     type="text"
                     placeholder="请输入微信号"
-                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-base text-text-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
+                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-base text-text-dark focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
                     required
                   />
                 </label>
@@ -584,7 +595,7 @@ function App() {
                     name="course"
                     type="text"
                     placeholder="如：英语思维课程"
-                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-base text-text-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
+                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-base text-text-dark focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
                     required
                   />
                 </label>
