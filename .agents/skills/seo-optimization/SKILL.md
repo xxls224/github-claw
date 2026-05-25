@@ -20,7 +20,7 @@ SEO、搜索引擎优化、sitemap、robots、结构化数据、Open Graph、Twi
 
 ## 执行流程
 1. 站点现状盘点：读取 index.html、public/、主内容组件，确认当前元数据与内容结构。
-2. 元数据优化：补齐 title、description、keywords、robots、canonical、Open Graph、Twitter Card。
+2. 元数据优化：补齐 title、description、keywords、robots、canonical、Open Graph、Twitter Card，社交分享图建议使用 1200x630 PNG/JPG。
 3. 结构化数据：提供 JSON-LD（组织/服务/本地业务等），确保信息准确且不过度承诺。
 4. 可抓取性：新增 robots.txt 与 sitemap.xml，校验 URL 与路径一致。
 5. 内容结构：确保单一 H1、层级清晰的 H2/H3、CTA 与锚点链接可用。

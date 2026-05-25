@@ -57,6 +57,7 @@ const FORMSPREE_ENDPOINT = 'https://formspree.io/f/yourFormId'
 
 - `index.html` 中的 canonical / Open Graph / Twitter / 结构化数据使用 `https://xxls224.github.io/github-claw/`，如更换域名或仓库名请同步更新
 - `public/robots.txt` 与 `public/sitemap.xml` 需与实际部署 URL 保持一致
+- `public/og-image.png` 为社交分享图片（建议 1200x630，可替换为品牌视觉）
 
 ## GitHub Pages 部署
 
