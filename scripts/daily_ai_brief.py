@@ -17,7 +17,7 @@ from zoneinfo import ZoneInfo
 
 import requests
 from github import Github
-from github.GithubException import UnknownObjectException
+from github.GithubException import GithubException, UnknownObjectException
 
 
 LABEL_NAME = "daily-ai-brief"
@@ -108,7 +108,7 @@ def validate_briefing_body(body: str) -> None:
     if not lines:
         raise ValueError("Briefing body is empty.")
 
-    title_pattern = r"^# Daily AI & Global Economic Briefing \| .+$"
+    title_pattern = rf"^# {re.escape(TITLE_PREFIX)}.+$"
     if not re.fullmatch(title_pattern, lines[0]):
         raise ValueError("Briefing title must match the required heading format.")
 
@@ -219,7 +219,7 @@ def publish_with_retries(repo, label_name: str, title: str, body: str, max_retri
     for attempt in range(1, max_retries + 1):
         try:
             return create_or_update_issue(repo, label_name, title, body)
-        except Exception as exc:  # noqa: BLE001
+        except (GithubException, requests.RequestException) as exc:
             last_error = exc
             if attempt >= max_retries:
                 break
@@ -273,7 +273,7 @@ def main() -> int:
             now = utc8_now()
             error_title = f"Daily AI & Global Economic Briefing | Automation Error | {now.strftime('%B')} {now.day}, {now.year}"
             error_body = create_error_body(now, args.label, exc)
-            issue, created = publish_with_retries(repo, LABEL_NAME, error_title, error_body, args.max_retries)
+            issue, created = publish_with_retries(repo, args.label, error_title, error_body, args.max_retries)
             print(json.dumps({"error_issue_number": issue.number, "created": created, "error": str(exc)}))
         except Exception as secondary_exc:  # noqa: BLE001
             print(f"fatal: {type(exc).__name__}: {exc}", file=sys.stderr)
