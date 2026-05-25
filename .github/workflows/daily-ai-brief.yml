@@ -56,9 +56,18 @@ jobs:
           CLEANUP_ONLY: ${{ inputs.cleanup_only }}
         run: |
           args=()
+          has_source=false
+          if [ -n "$BRIEFING_BODY" ] || [ -n "$BRIEFING_BODY_FILE" ] || [ -n "$BRIEFING_BODY_URL" ]; then
+            has_source=true
+          fi
+
           if [ "$CLEANUP_ONLY" = "true" ]; then
             args+=("--cleanup-only")
+          elif [ "$GITHUB_EVENT_NAME" = "schedule" ] && [ "$has_source" = "false" ]; then
+            echo "No briefing source configured (BRIEFING_BODY, BRIEFING_BODY_FILE, BRIEFING_BODY_URL all unset) for schedule run; switching to cleanup-only mode."
+            args+=("--cleanup-only")
           fi
+
           if [ -n "$BRIEFING_BODY" ]; then
             args+=("--body" "$BRIEFING_BODY")
           elif [ -n "$BRIEFING_BODY_FILE" ]; then
