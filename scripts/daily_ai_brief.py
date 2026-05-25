@@ -21,7 +21,6 @@ from github.GithubException import UnknownObjectException
 
 
 LABEL_NAME = "daily-ai-brief"
-ERROR_LABEL_NAME = "daily-ai-brief"
 STALE_DAYS_DEFAULT = 30
 MAX_RETRIES_DEFAULT = 3
 UTC8 = ZoneInfo("Asia/Shanghai")
@@ -109,7 +108,7 @@ def validate_briefing_body(body: str) -> None:
     if not lines:
         raise ValueError("Briefing body is empty.")
 
-    title_pattern = r"^# Daily AI &amp; Global Economic Briefing \| .+$"
+    title_pattern = r"^# Daily AI & Global Economic Briefing \| .+$"
     if not re.fullmatch(title_pattern, lines[0]):
         raise ValueError("Briefing title must match the required heading format.")
 
@@ -170,7 +169,7 @@ def create_error_body(now: datetime, label_name: str, error: Exception) -> str:
     return normalize_body(
         "\n".join(
             [
-                f"# Daily AI &amp; Global Economic Briefing | Automation Error | {now.strftime('%B')} {now.day}, {now.year}",
+                f"# Daily AI & Global Economic Briefing | Automation Error | {now.strftime('%B')} {now.day}, {now.year}",
                 "",
                 "## I. Top Story of the Day (1-2 most impactful events)",
                 "- **Event Overview**: Briefing publication failed before the issue could be created.",
@@ -272,9 +271,9 @@ def main() -> int:
             repo = resolve_github_repo()
             ensure_label(repo, args.label)
             now = utc8_now()
-            error_title = f"Daily AI &amp; Global Economic Briefing | Automation Error | {now.strftime('%B')} {now.day}, {now.year}"
+            error_title = f"Daily AI & Global Economic Briefing | Automation Error | {now.strftime('%B')} {now.day}, {now.year}"
             error_body = create_error_body(now, args.label, exc)
-            issue, created = publish_with_retries(repo, ERROR_LABEL_NAME, error_title, error_body, args.max_retries)
+            issue, created = publish_with_retries(repo, LABEL_NAME, error_title, error_body, args.max_retries)
             print(json.dumps({"error_issue_number": issue.number, "created": created, "error": str(exc)}))
         except Exception as secondary_exc:  # noqa: BLE001
             print(f"fatal: {type(exc).__name__}: {exc}", file=sys.stderr)

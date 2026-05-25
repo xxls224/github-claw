@@ -13,7 +13,7 @@ This repository now includes a scheduled GitHub Actions publisher for a daily AI
 
 The issue body must match the mandated structure exactly:
 
-1. Title: `# Daily AI &amp; Global Economic Briefing | Month Day, Year`
+1. Title: `# Daily AI & Global Economic Briefing | Month Day, Year`
 2. Sections I through VI in the prescribed order
 3. Footer lines:
    - `*Data Source: GitHub Copilot global public information retrieval*`
