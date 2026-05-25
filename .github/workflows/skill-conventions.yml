@@ -1,0 +1,40 @@
+name: Validate skill conventions
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-skills:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate .agents/skills layout
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ ! -d .agents/skills ]]; then
+            exit 0
+          fi
+
+          if find .agents/skills -mindepth 1 -maxdepth 1 -type f | grep -q .; then
+            echo "Do not place files directly under .agents/skills/: use one directory per skill."
+            exit 1
+          fi
+
+          while IFS= read -r skill_dir; do
+            [[ -z "$skill_dir" ]] && continue
+
+            if [[ ! -f "$skill_dir/SKILL.md" ]]; then
+              echo "Missing SKILL.md in $skill_dir"
+              exit 1
+            fi
+          done < <(find .agents/skills -mindepth 1 -maxdepth 1 -type d | sort)
