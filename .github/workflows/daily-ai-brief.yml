@@ -1,0 +1,69 @@
+name: Daily AI & Global Economic Briefing
+
+on:
+  schedule:
+    - cron: '0 5 * * *'
+  workflow_dispatch:
+    inputs:
+      briefing_body:
+        description: Optional full Markdown briefing body
+        required: false
+        type: string
+      briefing_body_file:
+        description: Optional path to a Markdown file in the repository
+        required: false
+        type: string
+      briefing_body_url:
+        description: Optional URL to a Markdown or JSON payload containing the briefing body
+        required: false
+        type: string
+      cleanup_only:
+        description: Close stale issues without creating a new briefing issue
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: daily-ai-brief
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip && pip install -r scripts/requirements.txt
+
+      - name: Publish briefing issue
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          BRIEFING_BODY: ${{ inputs.briefing_body }}
+          BRIEFING_BODY_FILE: ${{ inputs.briefing_body_file || vars.DAILY_BRIEF_BODY_FILE }}
+          BRIEFING_BODY_URL: ${{ inputs.briefing_body_url || vars.DAILY_BRIEF_BODY_URL }}
+          CLEANUP_ONLY: ${{ inputs.cleanup_only }}
+        run: |
+          args=()
+          if [ "$CLEANUP_ONLY" = "true" ]; then
+            args+=("--cleanup-only")
+          fi
+          if [ -n "$BRIEFING_BODY" ]; then
+            args+=("--body" "$BRIEFING_BODY")
+          elif [ -n "$BRIEFING_BODY_FILE" ]; then
+            args+=("--body-file" "$BRIEFING_BODY_FILE")
+          elif [ -n "$BRIEFING_BODY_URL" ]; then
+            args+=("--body-url" "$BRIEFING_BODY_URL")
+          fi
+          python scripts/daily_ai_brief.py "${args[@]}"
