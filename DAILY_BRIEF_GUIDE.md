@@ -4,7 +4,7 @@ This repository now includes a scheduled GitHub Actions publisher for a daily AI
 
 ## What it does
 
-- Runs on a GitHub Actions cron schedule at 13:00 Beijing time (05:00 UTC).
+- Runs on a GitHub Actions cron schedule at 08:00 and 14:00 Beijing time (00:00 and 06:00 UTC).
 - Publishes one issue per day with the label `daily-ai-brief`.
 - Closes open briefing issues older than 30 days.
 - Retries publication up to two times before creating an error notification issue.
@@ -37,7 +37,8 @@ For a fully automated deployment, configure `DAILY_BRIEF_BODY_URL` to point at a
 Edit `.github/workflows/daily-ai-brief.yml`:
 
 - GitHub cron uses UTC.
-- 13:00 Beijing time = 05:00 UTC.
+- 08:00 Beijing time = 00:00 UTC.
+- 14:00 Beijing time = 06:00 UTC.
 - Update the `schedule.cron` field if the target timezone changes.
 
 ## Adding more delivery methods
