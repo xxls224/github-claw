@@ -5,6 +5,7 @@ This repository now includes a scheduled GitHub Actions publisher for a daily AI
 ## What it does
 
 - Runs on a GitHub Actions cron schedule at 08:00 and 14:00 Beijing time (00:00 and 06:00 UTC).
+- Automatically builds the briefing body from multiple official public feeds when no manual body is supplied.
 - Publishes one issue per day with the label `daily-ai-brief`.
 - Closes open briefing issues older than 30 days.
 - Retries publication up to two times before creating an error notification issue.
@@ -30,7 +31,22 @@ The workflow accepts three optional sources:
 - `briefing_body_file`: a repository path containing the Markdown body, or the repository variable `DAILY_BRIEF_BODY_FILE`
 - `briefing_body_url`: a raw Markdown or JSON payload URL, or the repository variable `DAILY_BRIEF_BODY_URL`
 
-For a fully automated deployment, configure `DAILY_BRIEF_BODY_URL` to point at a generated Markdown artifact that already follows the required structure.
+For a fully automated deployment, the workflow now generates a body from multiple official sources by default. You can still override it with a manual body, a repository file, or a remote URL.
+
+## Official source families used by the generator
+
+- AI and product updates:
+  - OpenAI Blog
+  - Anthropic News
+  - Google DeepMind Blog
+  - Microsoft AI Blog
+- Macroeconomic and financial releases:
+  - Federal Reserve press releases
+  - European Central Bank press releases
+  - IMF news
+  - OECD newsroom
+
+The generator prefers official newsroom, press release, and release-calendar style pages so the briefing stays grounded in primary sources.
 
 ## Changing the execution time
 

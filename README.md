@@ -4,7 +4,7 @@
 
 ## GitHub Actions 简报自动化
 
-仓库新增 `daily-ai-brief` 定时 Issue 发布流程，说明见 `DAILY_BRIEF_GUIDE.md`，当前在北京时间 08:00 和 14:00 触发。
+仓库新增 `daily-ai-brief` 定时 Issue 发布流程，说明见 `DAILY_BRIEF_GUIDE.md`，当前在北京时间 08:00 和 14:00 触发，并默认从多个官方来源自动生成正文。
 
 ## 开发与构建
 
