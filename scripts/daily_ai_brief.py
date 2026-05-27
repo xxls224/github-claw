@@ -19,7 +19,7 @@ import requests
 from github import Github
 from github.GithubException import GithubException, UnknownObjectException
 
-from generate_daily_ai_brief import build_briefing, utc8_now as briefing_utc8_now
+from generate_daily_ai_brief import build_briefing, utc8_now
 
 
 LABEL_NAME = "daily-ai-brief"
@@ -93,7 +93,10 @@ def load_briefing_input(args: argparse.Namespace) -> BriefingInput:
         return BriefingInput(body=load_text_from_file(args.body_file), source=args.body_file)
     if args.body_url:
         return BriefingInput(body=load_text_from_url(args.body_url), source=args.body_url)
-    return BriefingInput(body=build_briefing(briefing_utc8_now()), source="official-feeds")
+    try:
+        return BriefingInput(body=build_briefing(utc8_now()), source="official-feeds")
+    except (requests.RequestException, ValueError) as exc:
+        raise ValueError(f"Failed to generate the default briefing from official feeds: {exc}") from exc
 
 
 def normalize_body(body: str) -> str:

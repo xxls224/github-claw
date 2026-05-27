@@ -21,6 +21,38 @@ UTC8 = ZoneInfo("Asia/Shanghai")
 TITLE_PREFIX = "Daily AI & Global Economic Briefing | "
 FOOTER_SOURCE = "*Data Source: GitHub Copilot global public information retrieval*"
 FOOTER_NOTICE = "*This briefing is for informational purposes only and does not constitute investment advice*"
+MAX_SUMMARY_LENGTH = 180
+MAX_ENTRIES_PER_FEED = 3
+MAX_SECTION_ENTRIES = 4
+REQUEST_TIMEOUT = 30
+TOP_STORY_LIMIT = 1
+AI_SECTION_LIMIT = 4
+MACRO_SECTION_LIMIT = 4
+MARKET_SECTION_LIMIT = 3
+EVENT_SECTION_LIMIT = 3
+
+SECTION_INTROS = {
+    "ai": (
+        "This section aggregates the latest official AI and product updates from {sources}.",
+        "The emphasis is on confirmed source statements, release notes, and research or deployment signals rather than social commentary.",
+        "These items help show where frontier model development, product shipping, and policy messaging are moving together.",
+    ),
+    "macro": (
+        "This section combines official macro and financial releases from {sources}.",
+        "The focus is on primary-source statements that shape rate expectations, inflation tracking, labor conditions, and external balance signals.",
+        "That keeps the briefing grounded in policy-relevant updates rather than second-hand market commentary.",
+    ),
+    "market": (
+        "This section translates the latest official policy and macro releases into a market-oriented read-through.",
+        "Because the brief prioritizes public institutional sources, it frames market performance through rate, liquidity, inflation, and risk-backdrop signals instead of relying on unofficial market chatter.",
+        "The goal is to show the direction of travel for risk assets, rates, and cross-border capital conditions.",
+    ),
+    "events": (
+        "This section looks ahead by highlighting the most relevant official calendars and institutional follow-ups implied by today's source set.",
+        "It is intentionally conservative: the brief only points to public schedules and announced follow-up windows from official bodies.",
+        "That keeps the forward view reliable while still giving the reader a practical checklist for the next day.",
+    ),
+}
 
 SECTION_TITLES = [
     "## I. Top Story of the Day (1-2 most impactful events)",
@@ -70,18 +102,21 @@ def normalize_text(text: str) -> str:
     return text.strip()
 
 
-def local_name(tag: str) -> str:
+def xml_local_name(tag: str) -> str:
     return tag.rsplit("}", 1)[-1].lower()
 
 
 def safe_get(url: str) -> str:
-    response = requests.get(
-        url,
-        timeout=30,
-        headers={"User-Agent": "github-claw-daily-brief/1.0"},
-    )
-    response.raise_for_status()
-    return response.text
+    try:
+        response = requests.get(
+            url,
+            timeout=REQUEST_TIMEOUT,
+            headers={"User-Agent": "github-claw-daily-brief/1.0"},
+        )
+        response.raise_for_status()
+        return response.text
+    except requests.RequestException as exc:
+        raise requests.RequestException(f"Unable to fetch official feed {url}") from exc
 
 
 def parse_feed(source: str, url: str) -> list[FeedEntry]:
@@ -89,7 +124,7 @@ def parse_feed(source: str, url: str) -> list[FeedEntry]:
     entries: list[FeedEntry] = []
 
     for node in root.iter():
-        if local_name(node.tag) not in {"item", "entry"}:
+        if xml_local_name(node.tag) not in {"item", "entry"}:
             continue
 
         title = "Untitled update"
@@ -98,7 +133,7 @@ def parse_feed(source: str, url: str) -> list[FeedEntry]:
         published = ""
 
         for child in list(node):
-            name = local_name(child.tag)
+            name = xml_local_name(child.tag)
             text = normalize_text(child.text or "")
             if name == "title" and text:
                 title = text
@@ -112,10 +147,6 @@ def parse_feed(source: str, url: str) -> list[FeedEntry]:
                 summary = text
             elif name in {"pubdate", "updated", "published", "date"} and text and not published:
                 published = text
-            elif name == "link" and not link:
-                href = child.attrib.get("href", "").strip()
-                if href:
-                    link = href
 
         if not summary:
             summary = title
@@ -137,8 +168,8 @@ def collect_entries(feeds: Iterable[tuple[str, str]]) -> list[FeedEntry]:
     collected: list[FeedEntry] = []
     for source, url in feeds:
         try:
-            collected.extend(parse_feed(source, url)[:3])
-        except Exception as exc:  # noqa: BLE001
+            collected.extend(parse_feed(source, url)[:MAX_ENTRIES_PER_FEED])
+        except (requests.RequestException, ET.ParseError, UnicodeError) as exc:
             collected.append(
                 FeedEntry(
                     source=source,
@@ -163,58 +194,43 @@ def dedupe_entries(entries: Iterable[FeedEntry]) -> list[FeedEntry]:
     return result
 
 
-def title_line(now: datetime) -> str:
+def format_briefing_title(now: datetime) -> str:
     return f"# {TITLE_PREFIX}{now.strftime('%B')} {now.day}, {now.year}"
 
 
-def format_entry(entry: FeedEntry, role: str) -> str:
-    summary = entry.summary[:180]
-    if len(entry.summary) > 180:
+def format_entry(entry: FeedEntry, entry_context: str) -> str:
+    summary = entry.summary[:MAX_SUMMARY_LENGTH]
+    if len(entry.summary) > MAX_SUMMARY_LENGTH:
         summary = summary.rstrip() + "..."
     published = f" Latest public timestamp: {entry.published}." if entry.published else ""
     return (
         f"- **{entry.source} — {entry.title}**\n"
-        f"  - 官方要点: {summary}{published}\n"
-        f"  - Briefing read-through: This {role.lower()} item is treated as a confirmed primary-source signal. It helps separate official messaging from market rumor and gives the day a stable reference point for follow-up analysis.\n"
-        f"  - Official link: {entry.link}. The item is kept in the briefing because it can be compared directly against the other institutional releases collected today, which improves cross-checking across AI and macro themes."
+        f"  - Official note: {summary}{published}\n"
+        f"  - Briefing read-through: This {entry_context.lower()} item confirms a primary-source signal and keeps the day anchored to official releases across multiple feeds. It is useful because the same signal can be checked against other official notes before any conclusion is drawn.\n"
+        f"  - Official link: {entry.link}. The item stays in the briefing to preserve cross-source comparison and reduce reliance on any single feed across AI and macro themes."
     )
 
 
 def section_intro(kind: str, sources: list[str]) -> str:
     joined = ", ".join(sources)
-    if kind == "ai":
-        return (
-            f"This section aggregates the latest official AI and product updates from {joined}. "
-            "The emphasis is on confirmed source statements, release notes, and research or deployment signals rather than social commentary. "
-            "These items help show where frontier model development, product shipping, and policy messaging are moving together."
-        )
-    if kind == "macro":
-        return (
-            f"This section combines official macro and financial releases from {joined}. "
-            "The focus is on primary-source statements that shape rate expectations, inflation tracking, labor conditions, and external balance signals. "
-            "That keeps the briefing grounded in policy-relevant updates rather than second-hand market commentary."
-        )
-    if kind == "market":
-        return (
-            "This section translates the latest official policy and macro releases into a market-oriented read-through. "
-            "Because the brief prioritizes public institutional sources, it frames market performance through rate, liquidity, inflation, and risk-backdrop signals instead of relying on unofficial market chatter. "
-            "The goal is to show the direction of travel for risk assets, rates, and cross-border capital conditions."
-        )
-    if kind == "events":
-        return (
-            "This section looks ahead by highlighting the most relevant official calendars and institutional follow-ups implied by today's source set. "
-            "It is intentionally conservative: the brief only points to public schedules and announced follow-up windows from official bodies. "
-            "That keeps the forward view reliable while still giving the reader a practical checklist for the next day."
-        )
-    return ""
+    intro_parts = SECTION_INTROS.get(kind)
+    if intro_parts is None:
+        return ""
+    first, second, third = intro_parts
+    return f"{first.format(sources=joined)} {second} {third}"
 
 
-def build_section(title: str, intro: str, entries: list[FeedEntry], role: str) -> list[str]:
+def build_section(title: str, intro: str, entries: list[FeedEntry], entry_context: str) -> list[str]:
     lines = [title, "", intro, ""]
-    for entry in entries[:4]:
-        lines.append(format_entry(entry, role))
+    for entry in entries[:MAX_SECTION_ENTRIES]:
+        lines.append(format_entry(entry, entry_context))
         lines.append("")
     return lines
+
+
+def skip_first_entries(entries: list[FeedEntry], limit: int) -> list[FeedEntry]:
+    """Skip the top story entry so the follow-up section does not repeat it."""
+    return entries[1 : 1 + limit]
 
 
 def build_briefing(now: datetime) -> str:
@@ -226,14 +242,16 @@ def build_briefing(now: datetime) -> str:
     ai_sources = [name for name, _ in AI_FEEDS]
     macro_sources = [name for name, _ in MACRO_FEEDS]
 
-    top_story_entries = (ai_entries[:1] + macro_entries[:1])[:1]
-    ai_focus = (ai_entries[:4] or macro_entries[:4])
-    macro_focus = (macro_entries[:4] or ai_entries[:4])
-    market_focus = (macro_entries[:2] + ai_entries[:1])[:2]
-    event_focus = (ai_entries[1:3] + macro_entries[1:3])[:2]
+    top_story_entries = ai_entries[:TOP_STORY_LIMIT]
+    if not top_story_entries:
+        top_story_entries = macro_entries[:TOP_STORY_LIMIT]
+    ai_focus = ai_entries[:AI_SECTION_LIMIT] if ai_entries else macro_entries[:2]
+    macro_focus = macro_entries[:MACRO_SECTION_LIMIT] if macro_entries else ai_entries[2:4] or ai_entries[:2]
+    market_focus = (macro_entries[:MARKET_SECTION_LIMIT] + ai_entries[:1])[:MARKET_SECTION_LIMIT]
+    event_focus = (skip_first_entries(ai_entries, EVENT_SECTION_LIMIT) + skip_first_entries(macro_entries, EVENT_SECTION_LIMIT))[:EVENT_SECTION_LIMIT]
 
     lines: list[str] = [
-        title_line(now),
+        format_briefing_title(now),
         "",
         "## I. Top Story of the Day (1-2 most impactful events)",
         "",
