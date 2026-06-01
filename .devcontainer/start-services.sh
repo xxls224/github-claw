@@ -63,9 +63,7 @@ start_python_backend() {
     return 0
   fi
 
-  if [[ -f scripts/daily_ai_brief.py ]]; then
-    echo "No persistent Python backend entrypoint found; leaving Python tooling installed."
-  fi
+  echo "No Python backend entrypoint found; backend startup skipped."
 }
 
 start_frontend
