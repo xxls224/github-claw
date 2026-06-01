@@ -21,7 +21,7 @@ start_service() {
   if [[ -f "$pid_file" && -f "$cmd_file" ]]; then
     local pid current_cmd
     pid="$(cat "$pid_file")"
-    current_cmd="$(ps -p "$pid" -o args= 2>/dev/null | sed -E 's/^[[:space:]]+//; s/[[:space:]]+$//; s/[[:space:]]+/ /g')"
+    current_cmd="$(tr '\0' ' ' <"/proc/$pid/cmdline" 2>/dev/null | sed -E 's/[[:space:]]+$//')"
     if [[ -n "$current_cmd" && "$current_cmd" == "$(<"$cmd_file")" ]]; then
       return 0
     fi
@@ -37,7 +37,14 @@ start_service() {
 }
 
 start_frontend() {
-  if [[ -f package.json ]] && node -e "const pkg = require('./package.json'); process.exit(pkg.scripts && pkg.scripts.dev ? 0 : 1)"; then
+  if [[ -f package.json ]] && python3 - <<'PY'
+import json
+from pathlib import Path
+
+pkg = json.loads(Path("package.json").read_text(encoding="utf-8"))
+raise SystemExit(0 if pkg.get("scripts", {}).get("dev") else 1)
+PY
+  then
     start_service frontend npm run dev -- --host 0.0.0.0 --port "$FRONTEND_PORT"
   else
     echo "No npm dev script found; frontend startup skipped."
