@@ -70,5 +70,3 @@ const FORMSPREE_ENDPOINT = 'https://formspree.io/f/yourFormId'
 - 前端默认转发：`5173`
 - Python 服务默认转发：`8000`
 - 服务日志默认写入 `$HOME/.cache/codespaces-services/`
-- 如需自定义 Python 启动命令，可设置 `BACKEND_START_COMMAND`
-- `BACKEND_START_COMMAND` 会作为 shell 命令执行，仅在受信任的工作区中使用

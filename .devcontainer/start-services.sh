@@ -36,11 +36,6 @@ start_frontend() {
 }
 
 start_python_backend() {
-  if [[ -n "${BACKEND_START_COMMAND:-}" ]]; then
-    start_service backend bash -lc "$BACKEND_START_COMMAND"
-    return 0
-  fi
-
   if [[ -f backend/main.py ]]; then
     start_service backend python3 backend/main.py
     return 0
