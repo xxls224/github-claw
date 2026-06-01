@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
-if [[ -f package-lock.json ]]; then
+if [[ -f package-lock.json && ! -d node_modules ]]; then
   npm ci
 elif [[ -f package.json ]]; then
   npm install

@@ -70,3 +70,4 @@ const FORMSPREE_ENDPOINT = 'https://formspree.io/f/yourFormId'
 - 前端默认转发：`5173`
 - Python 服务默认转发：`8000`
 - 服务日志默认写入 `$HOME/.cache/codespaces-services/`
+- 可通过 `tail -f ~/.cache/codespaces-services/*.log` 查看启动日志
