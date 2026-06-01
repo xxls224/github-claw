@@ -62,3 +62,11 @@ const FORMSPREE_ENDPOINT = 'https://formspree.io/f/yourFormId'
 ```
 
 如果仓库名改变，请同步更新 `vite.config.js` 中的 `base` 字段。
+
+## GitHub Codespaces
+
+已补充 `.devcontainer/` 配置，Codespace 启动后会自动安装前端依赖、Python 依赖并安装 FFmpeg，随后尝试启动前端开发服务器与可用的 Python 服务入口。
+
+- 前端默认转发：`5173`
+- Python 服务默认转发：`8000`
+- 如需自定义 Python 启动命令，可设置 `BACKEND_START_COMMAND`
