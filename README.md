@@ -70,5 +70,5 @@ const FORMSPREE_ENDPOINT = 'https://formspree.io/f/yourFormId'
 - 前端默认转发：`5173`
 - Python 服务默认转发：`8000`
 - 服务日志默认写入 `$HOME/.cache/codespaces-services/`
-- 可通过 `tail -f ~/.cache/codespaces-services/*.log` 查看启动日志
+- 可通过 `ls ~/.cache/codespaces-services/` 查看当前日志文件，再用 `tail -f ~/.cache/codespaces-services/frontend-vite.log` 等方式跟踪
 - 日志不会自动轮转，Codespace 很长时间未清理时可手动删除该目录下旧日志

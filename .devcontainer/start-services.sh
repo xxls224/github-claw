@@ -10,29 +10,28 @@ mkdir -p "$STATE_DIR"
 start_service() {
   local name="$1"
   local pid_file="$STATE_DIR/${name}.pid"
-  local cmd_file="$STATE_DIR/${name}.cmd"
+  local hash_file="$STATE_DIR/${name}.hash"
   local log_file="$STATE_DIR/${name}.log"
   shift
 
-  local expected_cmd
-  expected_cmd="$(printf '%q ' "$@")"
-  expected_cmd="${expected_cmd% }"
+  local expected_hash current_hash
+  expected_hash="$(printf '%s\0' "$@" | sha256sum | awk '{print $1}')"
 
-  if [[ -f "$pid_file" && -f "$cmd_file" ]]; then
+  if [[ -f "$pid_file" && -f "$hash_file" ]]; then
     local pid current_cmd
     pid="$(cat "$pid_file")"
-    current_cmd="$(tr '\0' ' ' <"/proc/$pid/cmdline" 2>/dev/null | sed -E 's/[[:space:]]+$//')"
-    if [[ -n "$current_cmd" && "$current_cmd" == "$(<"$cmd_file")" ]]; then
+    current_hash="$(sha256sum <"/proc/$pid/cmdline" 2>/dev/null | awk '{print $1}')"
+    if [[ -n "$current_hash" && "$current_hash" == "$(<"$hash_file")" ]]; then
       return 0
     fi
-    rm -f "$pid_file" "$cmd_file"
+    rm -f "$pid_file" "$hash_file"
   fi
 
   (
     cd "$ROOT"
     nohup "$@" >"$log_file" 2>&1 &
     echo $! >"$pid_file"
-    printf '%s\n' "$expected_cmd" >"$cmd_file"
+    printf '%s\n' "$expected_hash" >"$hash_file"
   )
 }
 
@@ -45,7 +44,7 @@ pkg = json.loads(Path("package.json").read_text(encoding="utf-8"))
 raise SystemExit(0 if pkg.get("scripts", {}).get("dev") else 1)
 PY
   then
-    start_service frontend npm run dev -- --host 0.0.0.0 --port "$FRONTEND_PORT"
+    start_service frontend-vite npm run dev -- --host 0.0.0.0 --port "$FRONTEND_PORT"
   else
     echo "No npm dev script found; frontend startup skipped."
   fi
@@ -53,22 +52,22 @@ PY
 
 start_python_backend() {
   if [[ -f backend/main.py ]]; then
-    start_service backend python3 backend/main.py
+    start_service backend-main python3 backend/main.py
     return 0
   fi
 
   if [[ -f backend/app.py ]]; then
-    start_service backend python3 backend/app.py
+    start_service backend-app python3 backend/app.py
     return 0
   fi
 
   if [[ -f app.py ]]; then
-    start_service backend python3 app.py
+    start_service backend-root python3 app.py
     return 0
   fi
 
   if [[ -f main.py ]]; then
-    start_service backend python3 main.py
+    start_service backend-main python3 main.py
     return 0
   fi
 
