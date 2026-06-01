@@ -13,13 +13,10 @@ start_service() {
   local log_file="$STATE_DIR/${name}.log"
   shift
 
-  local current_name
-
   if [[ -f "$pid_file" ]]; then
     local pid
     pid="$(cat "$pid_file")"
-    current_name="$(tr '\0' '\n' </proc/$pid/cmdline 2>/dev/null | head -n1)"
-    if [[ "$current_name" == "$name" ]]; then
+    if kill -0 "$pid" 2>/dev/null; then
       return 0
     fi
     rm -f "$pid_file"
@@ -57,7 +54,7 @@ start_python_backend() {
   fi
 
   if [[ -f main.py ]]; then
-    start_service backend-main python3 main.py
+    start_service backend-root-main python3 main.py
     return 0
   fi
 
