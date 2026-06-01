@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-STATE_DIR="${TMPDIR:-/tmp}/codespaces-services"
+STATE_DIR="${CODESPACES_SERVICE_STATE_DIR:-$HOME/.cache/codespaces-services}"
 FRONTEND_PORT="${FRONTEND_PORT:-5173}"
 BACKEND_PORT="${BACKEND_PORT:-8000}"
 mkdir -p "$STATE_DIR"

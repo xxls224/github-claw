@@ -1,5 +1,5 @@
 {
-  "name": "github-claw",
+  "name": "Frontend and Python Workspace",
   "build": {
     "dockerfile": "Dockerfile"
   },
