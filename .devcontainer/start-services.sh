@@ -9,23 +9,13 @@ mkdir -p "$STATE_DIR"
 
 start_service() {
   local name="$1"
-  local pid_file="$STATE_DIR/${name}.pid"
+  local lock_file="$STATE_DIR/${name}.lock"
   local log_file="$STATE_DIR/${name}.log"
   shift
 
-  if [[ -f "$pid_file" ]]; then
-    local pid
-    pid="$(cat "$pid_file")"
-    if kill -0 "$pid" 2>/dev/null; then
-      return 0
-    fi
-    rm -f "$pid_file"
-  fi
-
   (
     cd "$ROOT"
-    nohup "$@" >"$log_file" 2>&1 &
-    echo $! >"$pid_file"
+    nohup flock -n "$lock_file" "$@" >"$log_file" 2>&1 &
   )
 }
 
@@ -57,7 +47,7 @@ start_python_backend() {
   fi
 
   if [[ -d backend ]]; then
-    start_service backend python3 -m http.server "$BACKEND_PORT" --directory backend
+    start_service backend bash -lc "cd backend && python3 -m http.server \"$BACKEND_PORT\""
     return 0
   fi
 
