@@ -32,6 +32,12 @@ const heroHighlights = [
   { icon: MapPin, text: '广州天河区上门/工作室教学' },
 ]
 
+const heroCards = [
+  { label: '本月名额', value: '每周仅接 8 位学生', note: '先到先安排' },
+  { label: '服务时间', value: '工作日 17:30-21:30', note: '周末 8:30-18:30' },
+  { label: '授课形式', value: '上门/工作室一对一', note: '天河区覆盖，可协商' },
+]
+
 const courses = [
   {
     icon: BookOpen,
@@ -105,6 +111,7 @@ function App() {
   const [scrolled, setScrolled] = useState(false)
   const [statsVisible, setStatsVisible] = useState(false)
   const statsRef = useRef(null)
+  const closeButtonRef = useRef(null)
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 8)
@@ -129,29 +136,75 @@ function App() {
     return () => observer.disconnect()
   }, [])
 
+  useEffect(() => {
+    if (!menuOpen) return undefined
+    closeButtonRef.current?.focus()
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setMenuOpen(false)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [menuOpen])
+
   return (
-    <div className="bg-white text-text-dark">
+    <div className="min-h-screen bg-slate-50 text-text-dark">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-primary focus:shadow-soft"
+      >
+        跳到主要内容
+      </a>
       <header
         className={`fixed top-0 z-50 w-full transition-all ${
-          scrolled ? 'bg-white shadow-soft' : 'bg-white/80 backdrop-blur'
+          scrolled
+            ? 'bg-white shadow-soft'
+            : 'bg-white/90 backdrop-blur-sm'
         }`}
       >
         <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-4">
-          <span className="text-lg font-semibold text-text-dark">思维与英语教育</span>
-          <nav className="hidden items-center gap-6 md:flex">
-            {navLinks.map((link) => (
+          <div className="flex items-center gap-3">
+            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-base font-semibold text-primary">
+              思
+            </span>
+            <div className="leading-tight">
+              <p className="text-base font-semibold text-text-dark">思维与英语教育</p>
+              <p className="text-xs text-text-medium">广州天河 · 一对一成长</p>
+            </div>
+          </div>
+          <div className="hidden items-center gap-8 md:flex">
+            <nav className="flex items-center gap-6" aria-label="主导航">
+              {navLinks.map((link) => (
+                <a
+                  key={link.id}
+                  href={`#${link.id}`}
+                  className="flex min-h-[48px] items-center text-base text-text-medium transition hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </nav>
+            <div className="flex items-center gap-3">
               <a
-                key={link.id}
-                href={`#${link.id}`}
-                className="flex min-h-[48px] items-center text-base text-text-medium transition hover:text-primary"
+                href="#booking"
+                className="flex min-h-[44px] items-center justify-center rounded-full border border-primary/30 px-4 text-sm font-semibold text-primary transition hover:border-primary hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
               >
-                {link.label}
+                预约试听
               </a>
-            ))}
-          </nav>
+              <a
+                href={WECHAT_LINK}
+                target="_blank"
+                rel="noreferrer"
+                className="flex min-h-[44px] items-center justify-center rounded-full bg-mint px-4 text-sm font-semibold text-white shadow-soft transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint/40"
+              >
+                微信咨询
+              </a>
+            </div>
+          </div>
           <button
             type="button"
-            className="flex min-h-[48px] min-w-[48px] items-center justify-center rounded-full border border-gray-200 text-text-dark transition hover:border-primary hover:text-primary md:hidden"
+            className="flex min-h-[48px] min-w-[48px] items-center justify-center rounded-full border border-gray-200 text-text-dark transition hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 md:hidden"
             onClick={() => setMenuOpen(true)}
             aria-label="打开导航菜单"
           >
@@ -161,20 +214,43 @@ function App() {
       </header>
 
       {menuOpen && (
-        <div className="fixed inset-0 z-50 bg-black/40 md:hidden">
-          <div className="absolute right-0 top-0 h-full w-72 bg-white p-6 shadow-xl">
+        <div
+          className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm md:hidden"
+          onClick={() => setMenuOpen(false)}
+          role="button"
+          tabIndex={0}
+          aria-label="关闭导航菜单"
+          onKeyDown={(event) => {
+            if (event.key === 'Escape') {
+              setMenuOpen(false)
+              return
+            }
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault()
+              setMenuOpen(false)
+            }
+          }}
+        >
+          <div
+            className="absolute right-0 top-0 h-full w-72 space-y-6 bg-white p-6 shadow-xl"
+            role="dialog"
+            aria-label="移动端导航"
+            aria-modal="true"
+            onClick={(event) => event.stopPropagation()}
+          >
             <div className="flex items-center justify-between">
               <span className="text-lg font-semibold text-text-dark">导航</span>
               <button
                 type="button"
-                className="flex min-h-[48px] min-w-[48px] items-center justify-center rounded-full border border-gray-200 text-text-dark"
+                className="flex min-h-[48px] min-w-[48px] items-center justify-center rounded-full border border-gray-200 text-text-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
                 onClick={() => setMenuOpen(false)}
                 aria-label="关闭导航菜单"
+                ref={closeButtonRef}
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
-            <div className="mt-6 space-y-2">
+            <nav className="space-y-2" aria-label="移动端导航链接">
               {navLinks.map((link) => (
                 <a
                   key={link.id}
@@ -185,58 +261,105 @@ function App() {
                   {link.label}
                 </a>
               ))}
+            </nav>
+            <div className="space-y-3">
+              <a
+                href="#booking"
+                onClick={() => setMenuOpen(false)}
+                className="flex min-h-[48px] items-center justify-center rounded-full border border-primary/30 text-base font-semibold text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+              >
+                预约试听
+              </a>
+              <a
+                href={WECHAT_LINK}
+                target="_blank"
+                rel="noreferrer"
+                className="flex min-h-[48px] items-center justify-center rounded-full bg-mint text-base font-semibold text-white shadow-soft transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint/40"
+              >
+                微信咨询
+              </a>
             </div>
           </div>
         </div>
       )}
 
-      <main className="pt-20">
+      <main id="main-content" className="pt-20">
         <section
           id="hero"
           className="bg-[length:cover] bg-center bg-no-repeat"
           style={{ backgroundImage: "url('/hero-bg.svg')" }}
         >
           <div className="mx-auto max-w-[1200px] px-4 py-16">
-            <div className="space-y-6">
-              <p className="text-sm font-semibold tracking-[0.2em] text-primary">
-                思维能力培养 · 个人家教
-              </p>
-              <h1 className="text-3xl font-semibold leading-snug text-text-dark sm:text-4xl">
-                用思维点亮成长，用英语连接世界
-              </h1>
-              <p className="text-base leading-relaxed text-text-medium sm:text-lg">
-                广州本地 | 书法・象棋・魔方・英语 | 一对一精品教学
-              </p>
-              <div className="space-y-3">
-                {heroHighlights.map((item) => {
-                  const Icon = item.icon
-                  return (
-                    <div
-                      key={item.text}
-                      className="flex items-start gap-3 rounded-2xl bg-white/90 p-4 text-text-dark shadow-soft"
-                    >
-                      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
-                        <Icon className="h-5 w-5" />
-                      </span>
-                      <p className="text-base leading-relaxed text-text-dark">{item.text}</p>
-                    </div>
-                  )
-                })}
+            <div className="grid gap-10 lg:grid-cols-[3fr_2fr] lg:items-center">
+              <div className="space-y-6">
+                <p className="text-sm font-semibold tracking-[0.2em] text-primary">
+                  思维能力培养 · 个人家教
+                </p>
+                <h1 className="text-3xl font-semibold leading-snug text-text-dark sm:text-4xl">
+                  用思维点亮成长，用英语连接世界
+                </h1>
+                <p className="text-base leading-relaxed text-text-medium sm:text-lg">
+                  广州本地 | 书法・象棋・魔方・英语 | 一对一精品教学
+                </p>
+                <div className="space-y-3">
+                  {heroHighlights.map((item) => {
+                    const Icon = item.icon
+                    return (
+                      <div
+                        key={item.text}
+                        className="flex items-start gap-3 rounded-2xl border border-white/60 bg-white/90 p-4 text-text-dark shadow-soft"
+                      >
+                        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+                          <Icon className="h-5 w-5" />
+                        </span>
+                        <p className="text-base leading-relaxed text-text-dark">{item.text}</p>
+                      </div>
+                    )
+                  })}
+                </div>
+                <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center">
+                  <a
+                    href={WECHAT_LINK}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex min-h-[48px] w-full items-center justify-center rounded-full bg-mint px-6 text-base font-semibold text-white shadow-soft transition hover:opacity-90 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint/40 sm:w-auto"
+                  >
+                    立即微信咨询
+                  </a>
+                  <a
+                    href="#booking"
+                    className="flex min-h-[48px] w-full items-center justify-center rounded-full border border-white/80 bg-white/70 px-6 text-base font-semibold text-primary transition hover:border-primary hover:text-primary active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 sm:w-auto"
+                  >
+                    预约免费试听课
+                  </a>
+                </div>
               </div>
-              <div className="flex flex-col gap-3 pt-2">
-                <a
-                  href={WECHAT_LINK}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex min-h-[48px] w-full items-center justify-center rounded-full bg-mint px-6 text-base font-semibold text-white shadow-soft transition hover:opacity-90 active:scale-[0.98]"
-                >
-                  立即微信咨询
-                </a>
+              <div className="space-y-4 rounded-3xl border border-white/70 bg-white/90 p-6 shadow-soft">
+                <div className="space-y-2">
+                  <p className="text-sm font-semibold text-primary">专属学习方案</p>
+                  <h2 className="text-2xl font-semibold text-text-dark">
+                    让孩子从兴趣出发，建立思维习惯
+                  </h2>
+                  <p className="text-sm leading-relaxed text-text-medium">
+                    每位孩子都将获得个性化评估与学习计划，课程强度和节奏可灵活调整。
+                  </p>
+                </div>
+                <dl className="grid gap-3">
+                  {heroCards.map((card) => (
+                    <div key={card.label} className="rounded-2xl bg-slate-50 p-4">
+                      <dt className="text-xs font-semibold text-text-medium">{card.label}</dt>
+                      <dd className="mt-2 space-y-1">
+                        <p className="text-base font-semibold text-text-dark">{card.value}</p>
+                        <p className="text-xs text-text-medium">{card.note}</p>
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
                 <a
                   href="#booking"
-                  className="flex min-h-[48px] w-full items-center justify-center rounded-full border border-white/80 bg-white/70 px-6 text-base font-semibold text-primary transition hover:border-primary hover:text-primary active:scale-[0.98]"
+                  className="flex min-h-[48px] w-full items-center justify-center rounded-full bg-primary text-base font-semibold text-white shadow-soft transition hover:opacity-90 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
                 >
-                  预约免费试听课
+                  立即预约评估
                 </a>
               </div>
             </div>
@@ -244,7 +367,7 @@ function App() {
         </section>
 
         <section id="philosophy" className="mx-auto max-w-[1200px] px-4 py-14">
-          <div className="space-y-4">
+          <div className="space-y-4 rounded-3xl bg-white p-6 shadow-soft">
             <h2 className="text-xl font-semibold text-text-dark">
               为什么选择思维教育？
             </h2>
@@ -266,13 +389,13 @@ function App() {
                   每一门课程都围绕思维能力培养，帮助孩子建立长期可持续的学习优势。
                 </p>
               </div>
-              <div className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2">
                 {courses.map((course) => {
                   const Icon = course.icon
                   return (
                     <div
                       key={course.title}
-                      className="rounded-2xl bg-white p-5 shadow-soft"
+                      className="rounded-2xl bg-white p-5 shadow-soft transition hover:-translate-y-1 hover:shadow-lg active:scale-[0.99]"
                     >
                       <div className="flex items-center gap-3">
                         <span className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
@@ -300,7 +423,7 @@ function App() {
                       </div>
                       <a
                         href="#booking"
-                        className="mt-4 flex min-h-[48px] w-full items-center justify-center rounded-full border border-primary text-base font-semibold text-primary transition hover:bg-primary hover:text-white active:scale-[0.98]"
+                        className="mt-4 flex min-h-[48px] w-full items-center justify-center rounded-full border border-primary text-base font-semibold text-primary transition hover:bg-primary hover:text-white active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
                       >
                         了解更多
                       </a>
@@ -320,36 +443,38 @@ function App() {
                 所有课程均为一对一教学，一次一结，不满意随时退费。
               </p>
             </div>
-            <div className="space-y-3">
-              {pricingRows.map((row) => (
-                <div key={row.type} className="rounded-2xl border border-gray-100 bg-white p-4">
-                  <p className="text-base font-semibold text-text-dark">{row.type}</p>
-                  <div className="mt-3 space-y-2 text-sm text-text-medium">
-                    <div className="flex items-center justify-between">
-                      <span>工作室教学</span>
-                      <span className="font-semibold text-text-dark">{row.studio}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span>上门教学</span>
-                      <span className="font-semibold text-text-dark">{row.home}</span>
+            <div className="grid gap-4 md:grid-cols-[1.1fr_0.9fr]">
+              <div className="space-y-3">
+                {pricingRows.map((row) => (
+                  <div key={row.type} className="rounded-2xl border border-gray-100 bg-white p-4">
+                    <p className="text-base font-semibold text-text-dark">{row.type}</p>
+                    <div className="mt-3 space-y-2 text-sm text-text-medium">
+                      <div className="flex items-center justify-between">
+                        <span>工作室教学</span>
+                        <span className="font-semibold text-text-dark">{row.studio}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span>上门教学</span>
+                        <span className="font-semibold text-text-dark">{row.home}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-            <div className="rounded-2xl bg-gray-50 p-4">
-              <p className="text-base font-semibold text-text-dark">课时包优惠</p>
-              <ul className="mt-3 space-y-2 text-sm text-text-medium">
-                {discountList.map((item) => (
-                  <li key={item} className="flex items-center gap-2">
-                    <span className="h-2 w-2 rounded-full bg-accent" />
-                    {item}
-                  </li>
                 ))}
-              </ul>
-              <p className="mt-3 text-sm text-text-medium">
-                备注：天河区全境上门，其他区域可协商。
-              </p>
+              </div>
+              <div className="rounded-2xl bg-white p-4 shadow-soft">
+                <p className="text-base font-semibold text-text-dark">课时包优惠</p>
+                <ul className="mt-3 space-y-2 text-sm text-text-medium">
+                  {discountList.map((item) => (
+                    <li key={item} className="flex items-center gap-2">
+                      <span className="h-2 w-2 rounded-full bg-accent" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-3 text-sm text-text-medium">
+                  备注：天河区全境上门，其他区域可协商。
+                </p>
+              </div>
             </div>
           </div>
         </section>
@@ -363,7 +488,7 @@ function App() {
                   专注思维能力训练，让每一次学习都有可感知的进步。
                 </p>
               </div>
-              <div ref={statsRef} className="grid gap-4">
+              <div ref={statsRef} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {stats.map((stat, index) => (
                   <div
                     key={stat.label}
@@ -392,11 +517,14 @@ function App() {
                 清晰流程，让家长和孩子轻松开启思维成长计划。
               </p>
             </div>
-            <div className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-2">
               {steps.map((step, index) => {
                 const Icon = step.icon
                 return (
-                  <div key={step.title} className="rounded-2xl border border-gray-100 bg-white p-5">
+                  <div
+                    key={step.title}
+                    className="rounded-2xl border border-gray-100 bg-white p-5 transition hover:-translate-y-1 hover:shadow-soft active:scale-[0.99]"
+                  >
                     <div className="flex items-center gap-3">
                       <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white">
                         {index + 1}
@@ -437,49 +565,51 @@ function App() {
               method="POST"
               className="space-y-4 rounded-2xl bg-gray-50 p-5"
             >
-              <label className="space-y-2 text-sm text-text-medium">
-                孩子姓名
-                <input
-                  name="childName"
-                  type="text"
-                  placeholder="请输入孩子姓名"
-                  className="w-full rounded-xl border border-gray-200 px-4 py-3 text-base text-text-dark focus:border-primary focus:outline-none"
-                  required
-                />
-              </label>
-              <label className="space-y-2 text-sm text-text-medium">
-                孩子年龄
-                <input
-                  name="childAge"
-                  type="text"
-                  placeholder="请输入孩子年龄"
-                  className="w-full rounded-xl border border-gray-200 px-4 py-3 text-base text-text-dark focus:border-primary focus:outline-none"
-                  required
-                />
-              </label>
-              <label className="space-y-2 text-sm text-text-medium">
-                联系微信
-                <input
-                  name="wechat"
-                  type="text"
-                  placeholder="请输入微信号"
-                  className="w-full rounded-xl border border-gray-200 px-4 py-3 text-base text-text-dark focus:border-primary focus:outline-none"
-                  required
-                />
-              </label>
-              <label className="space-y-2 text-sm text-text-medium">
-                想咨询的课程
-                <input
-                  name="course"
-                  type="text"
-                  placeholder="如：英语思维课程"
-                  className="w-full rounded-xl border border-gray-200 px-4 py-3 text-base text-text-dark focus:border-primary focus:outline-none"
-                  required
-                />
-              </label>
+              <div className="grid gap-4 md:grid-cols-2">
+                <label className="space-y-2 text-sm text-text-medium">
+                  孩子姓名
+                  <input
+                    name="childName"
+                    type="text"
+                    placeholder="请输入孩子姓名"
+                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-base text-text-dark focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
+                    required
+                  />
+                </label>
+                <label className="space-y-2 text-sm text-text-medium">
+                  孩子年龄
+                  <input
+                    name="childAge"
+                    type="text"
+                    placeholder="请输入孩子年龄"
+                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-base text-text-dark focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
+                    required
+                  />
+                </label>
+                <label className="space-y-2 text-sm text-text-medium">
+                  联系微信
+                  <input
+                    name="wechat"
+                    type="text"
+                    placeholder="请输入微信号"
+                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-base text-text-dark focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
+                    required
+                  />
+                </label>
+                <label className="space-y-2 text-sm text-text-medium">
+                  想咨询的课程
+                  <input
+                    name="course"
+                    type="text"
+                    placeholder="如：英语思维课程"
+                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-base text-text-dark focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
+                    required
+                  />
+                </label>
+              </div>
               <button
                 type="submit"
-                className="flex min-h-[48px] w-full items-center justify-center rounded-full bg-mint text-base font-semibold text-white shadow-soft transition hover:opacity-90 active:scale-[0.98]"
+                className="flex min-h-[48px] w-full items-center justify-center rounded-full bg-mint text-base font-semibold text-white shadow-soft transition hover:opacity-90 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint/40"
               >
                 立即预约免费试听课
               </button>
@@ -523,7 +653,7 @@ function App() {
         href={WECHAT_LINK}
         target="_blank"
         rel="noreferrer"
-        className="fixed bottom-6 right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-mint text-white shadow-soft transition hover:opacity-90 active:scale-95"
+        className="fixed bottom-6 right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-mint text-white shadow-soft transition hover:opacity-90 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint/40"
         aria-label="微信咨询"
       >
         <MessageCircle className="h-6 w-6" />
