@@ -20,11 +20,11 @@ const TestimonialsSection = () => {
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold text-text-dark">精选匿名家长评价</h3>
-      <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2">
+      <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 md:mx-0 md:grid md:grid-cols-3 md:gap-4 md:overflow-visible md:px-0">
         {testimonials.map((item) => (
           <article
             key={item.author}
-            className="min-w-[80%] snap-start rounded-2xl bg-white p-5 shadow-soft"
+            className="min-w-[80%] snap-start rounded-2xl border border-gray-100 bg-white p-5 shadow-soft md:min-w-0"
           >
             <p className="text-base leading-relaxed text-text-medium">“{item.quote}”</p>
             <p className="mt-4 text-sm font-semibold text-text-dark">—— {item.author}</p>
