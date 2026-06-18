@@ -39,10 +39,13 @@ const FaqSection = () => {
         {faqItems.map((item, index) => {
           const isOpen = openIndex === index
           return (
-            <div key={item.question} className="rounded-2xl bg-white p-4 shadow-soft">
+            <div
+              key={item.question}
+              className="rounded-2xl border border-gray-100 bg-white p-4 shadow-soft"
+            >
               <button
                 type="button"
-                className="flex min-h-[48px] w-full items-center justify-between text-left text-base font-semibold text-text-dark"
+                className="flex min-h-[48px] w-full items-center justify-between text-left text-base font-semibold text-text-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
                 onClick={() => setOpenIndex(isOpen ? -1 : index)}
                 aria-expanded={isOpen}
               >
